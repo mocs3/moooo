@@ -1,0 +1,108 @@
+import subprocess
+import re
+import requests
+import matplotlib.pyplot as plt
+import cartopy.crs as ccrs
+import cartopy
+import ipaddress
+x=[]
+  
+def get_hops(dest_ip):
+    # Run traceroute command to get the route to the destination IP
+    trace_output = subprocess.run(['tracert', dest_ip], capture_output=True, text=True).stdout
+
+    # Extract IP addresses from the traceroute output
+    hop_ips = re.findall(r'\b(?:\d{1,3}\.){3}\d{1,3}\b', trace_output)
+
+    return hop_ips 
+    
+# Example destination IP
+destination_ip = str(input("enter where u want to go"))
+
+# Get hops
+hops = get_hops(destination_ip)
+
+# Print hops
+for hop in hops:
+    x.append(hop)
+  
+
+
+
+
+a={}
+b={}
+
+
+def get_ip_info(ip):
+    url = f'https://ipinfo.io/{ipaddress.ip_address(ip)}/json'
+    response = requests.get(url)
+    data = response.json()
+    country = data.get("country")
+    loc = data.get("loc")
+    if country and loc:
+        lat, lon = loc.split(",")
+        return {
+            "country": country,
+            "lat": lat,
+            "lon": lon
+        }
+    else:
+        return None
+
+def print_ip_info(ip_list):
+    global a,b
+    for ip in ip_list:
+        info = get_ip_info(ip)
+        if info:
+            a["lat"]=float(info["lat"])
+            a["lon"]=float(info["lon"])
+            b[info['country']]=a
+            a={}
+            #a[info["country"]]={f"lon:{info["lon"]}",f"lat:{info["lat"]}"}
+            # print(f"{info[country]}:"+f"{lat}")
+        else:
+            pass
+    return b      
+if __name__ == "__main__":
+    #example data(caution: many of the below hops are bogons.)
+    ip_list = ['8.8.8.8', '10.194.0.13', '10.254.239.1', '10.255.107.2', '10.255.1.26', '10.119.233.65', '10.119.234.162', '72.14.194.160', '142.251.226.85', '142.251.52.217', '8.8.8.8']  # Add your list of IP addresses here
+   # if want to get data from  your terminal  uncomment beow line ,since this progam uses  tracrt(considering u are in windows OS) to get hops data.
+   # ip_list=x
+    print_ip_info( ip_list)
+countries_data=b
+
+def plot_countries_on_map(countries):
+    # Create a new figure with a Cartopy projection
+    fig = plt.figure(figsize=(10, 5))
+    ax = fig.add_subplot(1, 1, 1, projection=ccrs.PlateCarree())
+
+    # Add coastlines and borders
+    ax.coastlines()
+    ax.add_feature(cartopy.feature.BORDERS, linestyle=':', linewidth=1)
+
+    # Plot the countries from the list
+    for i, country in enumerate(countries):
+        try:
+            ax.text(countries[country]['lon'], countries[country]['lat'], country, fontsize=8, color='red',
+                    ha='center', va='center', transform=ccrs.PlateCarree())
+            
+            # Plot connecting lines between countries
+            if i < len(countries) - 1:
+                start_country = countries[country]
+                next_country = countries[list(countries.keys())[i+1]]
+                plt.plot([start_country['lon'], next_country['lon']], [start_country['lat'], next_country['lat']], 'r--',
+                         transform=ccrs.PlateCarree())
+        except KeyError:
+            print(f"Could not find coordinates for {country}")
+    ax.set_global()
+    # Show the map
+    plt.title('Path of the DATA')
+    plt.show()
+
+# Example dictionary of countries with latitude and longitude coordinates
+
+# Plot the countries on the world map
+plot_countries_on_map(countries_data)
+
+    

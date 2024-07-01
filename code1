@@ -69,15 +69,14 @@ if __name__ == "__main__":
 countries_data=b
 
 def plot_countries_on_map(countries):
-    # Create a new figure with a Cartopy projection
+   
     fig = plt.figure(figsize=(10, 5))
     ax = fig.add_subplot(1, 1, 1, projection=ccrs.PlateCarree())
 
-    # Add coastlines and borders
     ax.coastlines()
     ax.add_feature(cartopy.feature.BORDERS, linestyle=':', linewidth=1)
 
-    # Plot the countries from the list
+    # plot the countries from the list
     for i, country in enumerate(countries):
         try:
             ax.text(countries[country]['lon'], countries[country]['lat'], country, fontsize=8, color='red',
@@ -95,8 +94,6 @@ def plot_countries_on_map(countries):
     # Show the map
     plt.title('Path of the DATA')
     plt.show()
-
-# Example dictionary of countries with latitude and longitude coordinates
 
 # Plot the countries on the world map
 plot_countries_on_map(countries_data)

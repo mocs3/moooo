@@ -26,10 +26,6 @@ hops = get_hops(destination_ip)
 for hop in hops:
     x.append(hop)
   
-
-
-
-
 a={}
 b={}
 
@@ -65,9 +61,9 @@ def print_ip_info(ip_list):
             pass
     return b      
 if __name__ == "__main__":
-    #example data(caution: many of the below hops are bogons.)
+    #example data(caution: many of the below test hops are bogons.)
     ip_list = ['8.8.8.8', '10.194.0.13', '10.254.239.1', '10.255.107.2', '10.255.1.26', '10.119.233.65', '10.119.234.162', '72.14.194.160', '142.251.226.85', '142.251.52.217', '8.8.8.8']  # Add your list of IP addresses here
-   # if want to get data from  your terminal  uncomment beow line ,since this progam uses  tracrt(considering u are in windows OS) to get hops data.
+   # if want to get data from  your terminal  uncomment below line ,since this progam uses  tracrt(considering u are in windows OS) to get hops data.
    # ip_list=x
     print_ip_info( ip_list)
 countries_data=b

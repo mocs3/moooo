@@ -1,0 +1,30 @@
+import datetime
+import psutil
+import screen_brightness_control as sbc
+
+def get_current_hour():
+   
+    current_time = datetime.datetime.now()
+    current_hour = current_time.hour
+    
+    return current_hour
+t=get_current_hour()    
+def conversion(t):
+    if t<6:
+        return (40/6)*t
+    if t>6 and t<15:
+        return (100/24)*(get_current_hour())
+    if t>15:
+        return  (100/24)*(24-get_current_hour())
+#change conversion factor according to preference.
+a=conversion(t)
+
+
+current_brightness = sbc.get_brightness()
+print(f"Current brightness: {current_brightness}")
+
+# Set the brightness to a%
+sbc.set_brightness(a)
+
+new_brightness = sbc.get_brightness()
+print(f"New brightness: {new_brightness}")

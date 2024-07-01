@@ -1,0 +1,4 @@
+#find the path your data is taking using this .py file , u just need to input the destination ip which either u can look using nslookup in your cmd.Just type "nslookup {www.example.com}" in your cmd to get ip of destination.
+#download libraries using "pip install  "(subprocess,re,requests,matplotlib ,cartopy, ipaddress) 
+#comment out the variable and comment the example data otherwise it will show for example data.
+  
